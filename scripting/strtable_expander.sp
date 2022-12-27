@@ -52,6 +52,8 @@ public MRESReturn DHookCallback_CreateStringTable(Address pThis, DHookReturn hRe
 			StrEqual(tableName, "ParticleEffectNames")
 			||
 			StrEqual(tableName, "DynamicModels")
+			||
+			StrEqual(tableName, "downloadables")
 		)
 	)
 	{
