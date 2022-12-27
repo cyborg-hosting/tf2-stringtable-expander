@@ -53,6 +53,8 @@ public MRESReturn DHookCallback_CreateStringTable(Address pThis, DHookReturn hRe
 			||
 			StrEqual(tableName, "DynamicModels")
 			||
+			StrEqual(tableName, "Scenes")
+			||
 			StrEqual(tableName, "downloadables")
 		)
 	)
