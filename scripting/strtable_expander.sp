@@ -1,9 +1,31 @@
 #pragma semicolon 1
 #pragma newdecls required
 
+#include <sourcemod>
 #include <dhooks>
 
-#define MULTIPLIER 4.0
+#define MULTIPLIER (1 << 1)
+
+// tableName="downloadables" maxentries=8192 udat_fixedsize=0 udat_networkbits=0 flags=0
+// tableName="modelprecache" maxentries=4096 udat_fixedsize=1 udat_networkbits=2 flags=0
+// tableName="genericprecache" maxentries=512 udat_fixedsize=1 udat_networkbits=2 flags=0
+// tableName="soundprecache" maxentries=16384 udat_fixedsize=1 udat_networkbits=2 flags=0
+// tableName="decalprecache" maxentries=512 udat_fixedsize=1 udat_networkbits=2 flags=0
+// tableName="instancebaseline" maxentries=1024 udat_fixedsize=0 udat_networkbits=0 flags=0
+// tableName="lightstyles" maxentries=64 udat_fixedsize=0 udat_networkbits=0 flags=0
+// tableName="userinfo" maxentries=256 udat_fixedsize=0 udat_networkbits=0 flags=0
+// tableName="DynamicModels" maxentries=4096 udat_fixedsize=1 udat_networkbits=1 flags=0
+// tableName="server_query_info" maxentries=4 udat_fixedsize=0 udat_networkbits=0 flags=0
+// tableName="ParticleEffectNames" maxentries=16384 udat_fixedsize=0 udat_networkbits=0 flags=0
+// tableName="EffectDispatch" maxentries=1024 udat_fixedsize=0 udat_networkbits=0 flags=0
+// tableName="VguiScreen" maxentries=256 udat_fixedsize=0 udat_networkbits=0 flags=0
+// tableName="Materials" maxentries=1024 udat_fixedsize=0 udat_networkbits=0 flags=0
+// tableName="InfoPanel" maxentries=128 udat_fixedsize=0 udat_networkbits=0 flags=0
+// tableName="Scenes" maxentries=8192 udat_fixedsize=0 udat_networkbits=0 flags=0
+// tableName="ServerMapCycle" maxentries=128 udat_fixedsize=0 udat_networkbits=0 flags=0
+// tableName="ServerPopFiles" maxentries=128 udat_fixedsize=0 udat_networkbits=0 flags=0
+// tableName="ServerMapCycleMvM" maxentries=128 udat_fixedsize=0 udat_networkbits=0 flags=0
+// tableName="GameRulesCreation" maxentries=1 udat_fixedsize=0 udat_networkbits=0 flags=0
 
 DynamicDetour g_hDHook_CreateStringTable;
 
@@ -43,26 +65,34 @@ public MRESReturn DHookCallback_CreateStringTable(Address pThis, DHookReturn hRe
 	int maxentries = hParams.Get(2);
 
 	// PrintToServer("[strtable_xpander] tableName=\"%s\" maxentries=%i udat_fixedsize=%i udat_networkbits=%i flags=%i", tableName, maxentries, hParams.Get(3), hParams.Get(4), hParams.Get(5));
+	// LogMessage("[strtable_xpander] tableName=\"%s\" maxentries=%i udat_fixedsize=%i udat_networkbits=%i flags=%i", tableName, maxentries, hParams.Get(3), hParams.Get(4), hParams.Get(5));
 
 	if
 	(
 		MULTIPLIER != 1.0
 		&&
 		(
-			StrEqual(tableName, "ParticleEffectNames")
+			StrEqual(tableName, "downloadables") // maxentries=8192 udat_fixedsize=0 udat_networkbits=0 flags=0
 			||
-			StrEqual(tableName, "DynamicModels")
+			StrEqual(tableName, "modelprecache") // maxentries=4096 udat_fixedsize=1 udat_networkbits=2 flags=0
 			||
-			StrEqual(tableName, "Scenes")
+			StrEqual(tableName, "genericprecache") // maxentries=512 udat_fixedsize=1 udat_networkbits=2 flags=0
 			||
-			StrEqual(tableName, "downloadables")
+			StrEqual(tableName, "soundprecache") // maxentries=16384 udat_fixedsize=1 udat_networkbits=2 flags=0
+			||
+			StrEqual(tableName, "decalprecache") // maxentries=512 udat_fixedsize=1 udat_networkbits=2 flags=0
+			||
+			StrEqual(tableName, "ParticleEffectNames") // maxentries=16384 udat_fixedsize=0 udat_networkbits=0 flags=0
+			||
+			StrEqual(tableName, "DynamicModels") // maxentries=4096 udat_fixedsize=1 udat_networkbits=1 flags=0
 		)
 	)
 	{
-		int _maxentries = RoundToFloor(MULTIPLIER * maxentries);
+		int _maxentries = maxentries * MULTIPLIER;
 		hParams.Set(2, _maxentries);
 
 		PrintToServer("[strtable_xpander] overrode maxentries for tableName=\"%s\" to ->%d<-\n", tableName, _maxentries);
+		LogMessage("[strtable_xpander] overrode maxentries for tableName=\"%s\" to ->%d<-\n", tableName, _maxentries);
 		return MRES_ChangedHandled;
 	}
 
