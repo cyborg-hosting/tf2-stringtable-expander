@@ -4,7 +4,7 @@
 #include <sourcemod>
 #include <dhooks>
 
-#define MULTIPLIER (1 << 1)
+#define MULTIPLIER (1 << 2)
 
 // tableName="downloadables" maxentries=8192 udat_fixedsize=0 udat_networkbits=0 flags=0
 // tableName="modelprecache" maxentries=4096 udat_fixedsize=1 udat_networkbits=2 flags=0
