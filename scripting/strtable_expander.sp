@@ -64,8 +64,8 @@ public MRESReturn DHookCallback_CreateStringTable(Address pThis, DHookReturn hRe
 	hParams.GetObjectVarString(1, 0, ObjectValueType_String, tableName, sizeof(tableName));
 	int maxentries = hParams.Get(2);
 
-	// PrintToServer("[strtable_xpander] tableName=\"%s\" maxentries=%i udat_fixedsize=%i udat_networkbits=%i flags=%i", tableName, maxentries, hParams.Get(3), hParams.Get(4), hParams.Get(5));
-	// LogMessage("[strtable_xpander] tableName=\"%s\" maxentries=%i udat_fixedsize=%i udat_networkbits=%i flags=%i", tableName, maxentries, hParams.Get(3), hParams.Get(4), hParams.Get(5));
+	// PrintToServer("[strtable_expander] tableName=\"%s\" maxentries=%i udat_fixedsize=%i udat_networkbits=%i flags=%i", tableName, maxentries, hParams.Get(3), hParams.Get(4), hParams.Get(5));
+	// LogMessage("[strtable_expander] tableName=\"%s\" maxentries=%i udat_fixedsize=%i udat_networkbits=%i flags=%i", tableName, maxentries, hParams.Get(3), hParams.Get(4), hParams.Get(5));
 
 	if
 	(
@@ -85,17 +85,19 @@ public MRESReturn DHookCallback_CreateStringTable(Address pThis, DHookReturn hRe
 			StrEqual(tableName, "ParticleEffectNames") // maxentries=16384 udat_fixedsize=0 udat_networkbits=0 flags=0
 			||
 			StrEqual(tableName, "DynamicModels") // maxentries=4096 udat_fixedsize=1 udat_networkbits=1 flags=0
+			||
+			StrEqual(tableName, "Scenes") // maxentries=8192 udat_fixedsize=0 udat_networkbits=0 flags=0
 		)
 	)
 	{
 		int _maxentries = maxentries * MULTIPLIER;
 		hParams.Set(2, _maxentries);
 
-		PrintToServer("[strtable_xpander] overrode maxentries for tableName=\"%s\" to ->%d<-\n", tableName, _maxentries);
-		LogMessage("[strtable_xpander] overrode maxentries for tableName=\"%s\" to ->%d<-\n", tableName, _maxentries);
+		PrintToServer("[strtable_expander] overrode maxentries for tableName=\"%s\" to ->%d<-\n", tableName, _maxentries);
+		LogMessage("[strtable_expander] overrode maxentries for tableName=\"%s\" to ->%d<-\n", tableName, _maxentries);
 		return MRES_ChangedHandled;
 	}
 
-	// PrintToServer("[strtable_xpander] CreateStringTable: -> result=MRES_Ignored\n");
+	// PrintToServer("[strtable_expander] CreateStringTable: -> result=MRES_Ignored\n");
 	return MRES_Ignored;
 }
