@@ -89,6 +89,10 @@ public MRESReturn DHookCallback_CreateStringTable(Address pThis, DHookReturn hRe
 			StrEqual(tableName, "Scenes") // maxentries=8192 udat_fixedsize=0 udat_networkbits=0 flags=0
 			||
 			StrEqual(tableName, "ServerMapCycle") // maxentries=128 udat_fixedsize=0 udat_networkbits=0 flags=0
+			||
+			StrEqual(tableName, "ServerPopFiles") // maxentries=128 udat_fixedsize=0 udat_networkbits=0 flags=0
+			||
+			StrEqual(tableName, "ServerMapCycleMvM") // maxentries=128 udat_fixedsize=0 udat_networkbits=0 flags=0
 		)
 	)
 	{
