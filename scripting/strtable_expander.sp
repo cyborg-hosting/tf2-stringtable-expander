@@ -4,7 +4,8 @@
 #include <sourcemod>
 #include <dhooks>
 
-#define MULTIPLIER (1 << 1)
+#define NETWORK_BITS_IS_NOT_ZERO_MULTIPLIER (1 << 1)
+#define NETWORK_BITS_IS_ZERO_MULTIPLIER (1 << 2)
 
 // tableName="downloadables" maxentries=8192 udat_fixedsize=0 udat_networkbits=0 flags=0
 // tableName="modelprecache" maxentries=4096 udat_fixedsize=1 udat_networkbits=2 flags=0
@@ -69,22 +70,32 @@ public MRESReturn DHookCallback_CreateStringTable(Address pThis, DHookReturn hRe
 
 	if
 	(
-		MULTIPLIER != 1.0
+		StrEqual(tableName, "modelprecache") // maxentries=4096 udat_fixedsize=1 udat_networkbits=2 flags=0
+		||
+		StrEqual(tableName, "genericprecache") // maxentries=512 udat_fixedsize=1 udat_networkbits=2 flags=0
+		||
+		StrEqual(tableName, "soundprecache") // maxentries=16384 udat_fixedsize=1 udat_networkbits=2 flags=0
+		||
+		StrEqual(tableName, "decalprecache") // maxentries=512 udat_fixedsize=1 udat_networkbits=2 flags=0
+		||
+		StrEqual(tableName, "DynamicModels") // maxentries=4096 udat_fixedsize=1 udat_networkbits=1 flags=0
+	)
+	{
+		int _maxentries = maxentries * NETWORK_BITS_IS_NOT_ZERO_MULTIPLIER;
+		hParams.Set(2, _maxentries);
+
+		PrintToServer("[strtable_expander] overrode maxentries for tableName=\"%s\" to ->%d<-\n", tableName, _maxentries);
+		LogMessage("[strtable_expander] overrode maxentries for tableName=\"%s\" to ->%d<-\n", tableName, _maxentries);
+		return MRES_ChangedHandled;
+	}
+	else if
+	(
+		NETWORK_BITS_IS_ZERO_MULTIPLIER != 1.0
 		&&
 		(
 			StrEqual(tableName, "downloadables") // maxentries=8192 udat_fixedsize=0 udat_networkbits=0 flags=0
 			||
-			StrEqual(tableName, "modelprecache") // maxentries=4096 udat_fixedsize=1 udat_networkbits=2 flags=0
-			||
-			StrEqual(tableName, "genericprecache") // maxentries=512 udat_fixedsize=1 udat_networkbits=2 flags=0
-			||
-			StrEqual(tableName, "soundprecache") // maxentries=16384 udat_fixedsize=1 udat_networkbits=2 flags=0
-			||
-			StrEqual(tableName, "decalprecache") // maxentries=512 udat_fixedsize=1 udat_networkbits=2 flags=0
-			||
 			StrEqual(tableName, "ParticleEffectNames") // maxentries=16384 udat_fixedsize=0 udat_networkbits=0 flags=0
-			||
-			StrEqual(tableName, "DynamicModels") // maxentries=4096 udat_fixedsize=1 udat_networkbits=1 flags=0
 			||
 			StrEqual(tableName, "Scenes") // maxentries=8192 udat_fixedsize=0 udat_networkbits=0 flags=0
 			||
@@ -96,7 +107,7 @@ public MRESReturn DHookCallback_CreateStringTable(Address pThis, DHookReturn hRe
 		)
 	)
 	{
-		int _maxentries = maxentries * MULTIPLIER;
+		int _maxentries = maxentries * NETWORK_BITS_IS_ZERO_MULTIPLIER;
 		hParams.Set(2, _maxentries);
 
 		PrintToServer("[strtable_expander] overrode maxentries for tableName=\"%s\" to ->%d<-\n", tableName, _maxentries);
